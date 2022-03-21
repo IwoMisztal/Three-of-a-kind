@@ -1,3 +1,5 @@
+using LookingForThree.Models;
+using LookingForThree.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LookingForThree.Controllers
@@ -7,26 +9,25 @@ namespace LookingForThree.Controllers
     public class NumberTableController : Controller
     {
 
-        private readonly ILogger<NumberTableController> _logger;
+        private readonly ThreeOfKindSevice _threeOfKindSevice;
 
-        public NumberTableController(ILogger<NumberTableController> logger)
+        public NumberTableController(ThreeOfKindSevice threeOfKindSevice)
         {
-            _logger = logger;
+            _threeOfKindSevice = threeOfKindSevice;
         }
 
         [HttpPost]
         [Route("/[controller]/proccessNumbers")]
-        public IActionResult ProccessNumbers(int[] numbersToProcess)
+        public IActionResult ProccessNumbers(string[] numbersToProcess)
         {
             List<int> processedNumbers;
-
-            processedNumbers = numbersToProcess
-                .Where(q => q <= 9)
-                .GroupBy(q => q)
-                .Where(q => q.Count() > 2)
-                .Select(q => q.Key)
-                .OrderByDescending(q => q)
-                .ToList();
+            try
+            {
+                processedNumbers = _threeOfKindSevice.ProcessNumbers(numbersToProcess);
+            } catch(NumberListException ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
             return Json(processedNumbers);
         }
     }
