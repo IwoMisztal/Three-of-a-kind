@@ -14,7 +14,7 @@ namespace LookingForThree.Services
                 int i;
                 return int.TryParse(q, out i) 
                     ? i 
-                    : throw new NumberListException("Invalid input format");
+                    : throw new Models.FormatException("Invalid input format");
             })
             .Where(q => q <= 9)
             .GroupBy(q => q)

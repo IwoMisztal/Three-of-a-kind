@@ -6,27 +6,27 @@ namespace LookingForThree.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class NumberTableController : Controller
+    public class ThreeOfKindController : Controller
     {
 
         private readonly ThreeOfKindSevice _threeOfKindSevice;
 
-        public NumberTableController(ThreeOfKindSevice threeOfKindSevice)
+        public ThreeOfKindController(ThreeOfKindSevice threeOfKindSevice)
         {
             _threeOfKindSevice = threeOfKindSevice;
         }
 
         [HttpPost]
-        [Route("/[controller]/proccessNumbers")]
+        [Route("/[controller]")]
         public IActionResult ProccessNumbers(string[] numbersToProcess)
         {
             List<int> processedNumbers;
             try
             {
                 processedNumbers = _threeOfKindSevice.ProcessNumbers(numbersToProcess);
-            } catch(NumberListException ex)
+            } catch(Models.FormatException ex)
             {
-                return StatusCode(500, ex.Message);
+                return base.StatusCode(500, ex.Message);
             }
             return Json(processedNumbers);
         }
